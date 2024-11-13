@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conteo de Billetes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .formulario-container {
+            max-width: 90%;
+            margin: auto;
+            padding: 10px;
+            background-color: #f7f7f7;
+            border: 2px solid #f53b2e; /* Rojo fuego */
+            border-top-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+        h2 {
+            text-align: center;
+            color: #f53b2e; /* Rojo fuego */
+        }
+        table {
+            width: 90%;
+            padding: 12%;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-top-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 12px;
+            border-bottom-left-radius: 12px;
+            box-sizing: border-box;            
+        }
+        th, td {
+            border: 0px solid black;
+            padding: 3px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .diferencia {
+            color: red;
+            font-weight: bold;
+        }
+        .image-cell img {
+            width: 80px;
+            height: 40px;
+        }
+        input[type="number"] {
+            width: 80px; /* Ajuste de ancho para acomodar el formato */
+            text-align: center; /* Mejor alineación para números */
+            font-size: 20px; /* Tamaño del texto */
+            padding: 5px;
+        }
+        input[type="text"] {
+            width: 120px; /* Ajuste de ancho para acomodar el formato */
+            text-align: center; /* Mejor alineación para números */
+            font-size: 20px; /* Tamaño del texto */
+            padding: 5px;
+        }
+    </style>
+    <script>
+        // Función para calcular el total de cada fila
+        function calculateRowTotal(row) {
+            const cantidad = parseInt(document.getElementById(`cantidad${row}`).value) || 0;
+            const valor = parseInt(document.getElementById(`billete${row}`).innerText);
+            const total = cantidad * valor;
+            document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');
+            calculateGrandTotal();
+        }
+
+        // Función para calcular el total general
+        function calculateGrandTotal() {
+            let grandTotal = 0;
+            for (let i = 1; i <= 7; i++) {
+                const total = parseInt(document.getElementById(`total${i}`).innerText.replace(/\./g, '')) || 0;
+                grandTotal += total;
+            }
+            document.getElementById("grandTotal").innerText = `$${grandTotal.toLocaleString('es-CO')}`;
+            calculateDifference();
+        }
+
+        // Función para formatear el campo "Pago" y calcular la diferencia
+        function formatPago() {
+            let pagoInput = document.getElementById('pago');
+            let value = pagoInput.value;
+
+            // Eliminar todos los caracteres excepto dígitos y comas
+            let cleaned = value.replace(/[^0-9,]/g, '');
+
+            // Dividir en parte entera y decimal
+            let parts = cleaned.split(',');
+            let integerPart = parts[0];
+            let decimalPart = parts[1] || '';
+
+            // Agregar separadores de miles
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            // Limitar a dos decimales
+            if (decimalPart.length > 2) {
+                decimalPart = decimalPart.substring(0, 2);
+            }
+
+            // Combinar las partes y agregar el signo de pesos
+            let formatted = '$' + integerPart;
+            if (decimalPart.length > 0) {
+                formatted += ',' + decimalPart;
+            }
+
+            pagoInput.value = formatted;
+        }
+
+        // Función para calcular la diferencia entre el total y el pago
+        function calculateDifference() {
+            const grandTotalText = document.getElementById("grandTotal").innerText;
+            const grandTotal = parseInt(grandTotalText.replace(/\./g, '').replace('$', '')) || 0;
+
+            const pagoInput = document.getElementById("pago").value;
+            // Eliminar caracteres de formato para obtener el número
+            let pago = parseFloat(pagoInput.replace(/\./g, '').replace(',', '.').replace('$', '')) || 0;
+
+            const difference = grandTotal - pago;
+            document.getElementById("diferencia").innerText = `$${difference.toLocaleString('es-CO')}`;
+            document.getElementById("diferencia").className = difference === 0 ? "" : "diferencia";
+        }
+    </script>
+</head>
+<body>
+    <div class="formulario-container">
+        <h2>Conteo de Billetes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>BILLETES</th>
+                    <th>CANTIDAD</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000" width="80" height="40"><br>
+                        <span id="billete1">1000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad1" oninput="calculateRowTotal(1)">
+                    </td>
+                    <td>
+                        <span id="total1">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000" width="80" height="40"><br>
+                        <span id="billete2">2000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad2" oninput="calculateRowTotal(2)">
+                    </td>
+                    <td>
+                        <span id="total2">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.ibb.co/gFzdWgG/b42082633279.jpg" alt="5000" width="80" height="40"><br>
+                        <span id="billete3">5000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad3" oninput="calculateRowTotal(3)">
+                    </td>
+                    <td>
+                        <span id="total3">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000" width="80" height="40"><br>
+                        <span id="billete4">10000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad4" oninput="calculateRowTotal(4)">
+                    </td>
+                    <td>
+                        <span id="total4">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000" width="80" height="40"><br>
+                        <span id="billete5">20000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad5" oninput="calculateRowTotal(5)">
+                    </td>
+                    <td>
+                        <span id="total5">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000" width="80" height="40"><br>
+                        <span id="billete6">50000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad6" oninput="calculateRowTotal(6)">
+                    </td>
+                    <td>
+                        <span id="total6">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="image-cell">
+                        <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000" width="80" height="40"><br>
+                        <span id="billete7">100000</span>
+                    </td>
+                    <td>
+                        <input type="number" id="cantidad7" oninput="calculateRowTotal(7)">
+                    </td>
+                    <td>
+                        <span id="total7">0</span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="2">Total:</td>
+                    <td id="grandTotal">$0</td>
+                </tr>
+                <tr>
+                    <td colspan="2">Pago:</td>
+                    <td>
+                        <input type="text" id="pago" oninput="formatPago(); calculateDifference()" placeholder="$0">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="diferencia">Diferencia:</td>
+                    <td id="diferencia">$0</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+</html>
