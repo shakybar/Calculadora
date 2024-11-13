@@ -1,2 +1,2 @@
 # calculadora
-Es una we'd que sor como calculadora 
+Es una wed que sirve  como calculadora para agilizar el conteo manual
