@@ -8,9 +8,12 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .formulario-container {
-            max-width: 90%;
+            max-width: 100%;
             margin: auto;
             padding: 10px;
             background-color: #f7f7f7;
@@ -19,60 +22,140 @@
             border-bottom-right-radius: 0;
             border-top-right-radius: 12px;
             border-bottom-left-radius: 12px;
+            box-sizing: border-box;
         }
         h2 {
             text-align: center;
             color: #f53b2e; /* Rojo fuego */
+            margin-bottom: 20px;
+            font-size: 1.8em; /* Aumentado el tamaño de la fuente */
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
         }
         table {
-            width: 90%;
-            padding: 12%;
-            font-size: 16px;
+            width: 100%;
+            table-layout: fixed; /* Distribución fija de columnas */
             border: 2px solid #ccc;
             border-top-left-radius: 0;
             border-bottom-right-radius: 0;
             border-top-right-radius: 12px;
             border-bottom-left-radius: 12px;
-            box-sizing: border-box;            
+            box-sizing: border-box;
+        }
+        /* Definición de anchos fijos para las columnas */
+        colgroup col:first-child {
+            width: 120px; /* Ancho fijo para la columna de imágenes */
+        }
+        colgroup col:nth-child(2) {
+            width: 60px; /* Ancho fijo para la columna de cantidad */
+        }
+        colgroup col:nth-child(3) {
+            width: 90px; /* Ancho fijo para la columna de total */
         }
         th, td {
-            border: 0px solid black;
-            padding: 3px;
+            border: 0;
+            padding: 2px 4px; /* Reducido el padding para liberar espacio */
             text-align: center;
+            word-wrap: break-word;
+            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
         }
         th {
             background-color: #f2f2f2;
+            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
         }
         .total-row {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.2em; /* Aumentado el tamaño de la fuente */
         }
         .diferencia {
             color: red;
             font-weight: bold;
+            font-size: 1.2em; /* Aumentado el tamaño de la fuente */
         }
         .image-cell img {
-            width: 80px;
-            height: 40px;
+            width: 100px; /* Aumentado de 80px a 100px */
+            height: 50px; /* Aumentado de 40px a 50px */
+            max-width: 100%;
+            height: auto;
         }
-        input[type="number"] {
-            width: 80px; /* Ajuste de ancho para acomodar el formato */
-            text-align: center; /* Mejor alineación para números */
-            font-size: 20px; /* Tamaño del texto */
-            padding: 5px;
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            max-width: 60px; /* Mantener para 'cantidad' (3 dígitos) */
+            text-align: center;
+            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
+            padding: 2px; /* Reducido el padding */
+            box-sizing: border-box;
         }
-        input[type="text"] {
-            width: 120px; /* Ajuste de ancho para acomodar el formato */
-            text-align: center; /* Mejor alineación para números */
-            font-size: 20px; /* Tamaño del texto */
-            padding: 5px;
+        /* Específicamente para el campo "Pago" */
+        input[type="text"]#pago {
+            max-width: 90px; /* Mantener para 'pago' (7 dígitos incluyendo separadores) */
+            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
+            padding: 2px; /* Reducido el padding */
+        }
+
+        /* Ajustes para pantallas medianas */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.6em; /* Reducido ligeramente el tamaño de la fuente */
+                margin-bottom: 15px;
+            }
+            th, td {
+                padding: 1px 2px; /* Reducido el padding */
+                font-size: 1em; /* Reducido el tamaño de la fuente */
+            }
+            .image-cell img {
+                width: 70%; /* Reducido para pantallas medianas */
+                height:70%;
+            }
+            input[type="number"], input[type="text"] {
+                max-width: 60px; /* Reducido para pantallas medianas */
+                font-size: 1.5em; /* Ajustado el tamaño de la fuente */
+                padding: 1px; /* Reducido el padding */
+            }
+            input[type="text"]#pago {
+                max-width: 130px; /* Reducido para pantallas medianas */
+                font-size: 1.5em;
+            }
+            .total-row, .diferencia {
+                font-size: 1.5em; /* Ajustado el tamaño de la fuente */
+            }
+        }
+        /* Ajustes para pantallas pequeñas */
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.4em; /* Reducido aún más el tamaño de la fuente */
+                margin-bottom: 10px;
+            }
+            th, td {
+                padding: 1px 2px; /* Reducido el padding */
+                font-size: 0.9em; /* Reducido el tamaño de la fuente */
+            }
+            .image-cell img {
+                width: 80px; /* Reducido para pantallas pequeñas */
+                height: 40px;
+            }
+            input[type="number"], input[type="text"] {
+                max-width: 40px; /* Reducido para pantallas pequeñas */
+                font-size: 0.9em; /* Reducido el tamaño de la fuente */
+                padding: 1px; /* Reducido el padding */
+            }
+            input[type="text"]#pago {
+                max-width: 70px; /* Reducido para pantallas pequeñas */
+                font-size: 0.9em;
+            }
+            .total-row, .diferencia {
+                font-size: 1em; /* Reducido el tamaño de la fuente */
+            }
         }
     </style>
     <script>
         // Función para calcular el total de cada fila
         function calculateRowTotal(row) {
-            const cantidad = parseInt(document.getElementById(`cantidad${row}`).value) || 0;
-            const valor = parseInt(document.getElementById(`billete${row}`).innerText);
+            const cantidadInput = document.getElementById(`cantidad${row}`);
+            const cantidad = parseInt(cantidadInput.value) || 0;
+            const valor = parseInt(document.getElementById(`billete${row}`).innerText.replace(/\./g, '')) || 0;
             const total = cantidad * valor;
             document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');
             calculateGrandTotal();
@@ -82,7 +165,8 @@
         function calculateGrandTotal() {
             let grandTotal = 0;
             for (let i = 1; i <= 7; i++) {
-                const total = parseInt(document.getElementById(`total${i}`).innerText.replace(/\./g, '')) || 0;
+                const totalText = document.getElementById(`total${i}`).innerText;
+                const total = parseInt(totalText.replace(/\./g, '').replace('$', '')) || 0;
                 grandTotal += total;
             }
             document.getElementById("grandTotal").innerText = `$${grandTotal.toLocaleString('es-CO')}`;
@@ -137,117 +221,124 @@
 <body>
     <div class="formulario-container">
         <h2>Conteo de Billetes</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>BILLETES</th>
-                    <th>CANTIDAD</th>
-                    <th>TOTAL</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000" width="80" height="40"><br>
-                        <span id="billete1">1000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad1" oninput="calculateRowTotal(1)">
-                    </td>
-                    <td>
-                        <span id="total1">0</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000" width="80" height="40"><br>
-                        <span id="billete2">2000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad2" oninput="calculateRowTotal(2)">
-                    </td>
-                    <td>
-                        <span id="total2">0</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.ibb.co/gFzdWgG/b42082633279.jpg" alt="5000" width="80" height="40"><br>
-                        <span id="billete3">5000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad3" oninput="calculateRowTotal(3)">
-                    </td>
-                    <td>
-                        <span id="total3">0</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000" width="80" height="40"><br>
-                        <span id="billete4">10000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad4" oninput="calculateRowTotal(4)">
-                    </td>
-                    <td>
-                        <span id="total4">0</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000" width="80" height="40"><br>
-                        <span id="billete5">20000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad5" oninput="calculateRowTotal(5)">
-                    </td>
-                    <td>
-                        <span id="total5">0</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000" width="80" height="40"><br>
-                        <span id="billete6">50000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad6" oninput="calculateRowTotal(6)">
-                    </td>
-                    <td>
-                        <span id="total6">0</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="image-cell">
-                        <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000" width="80" height="40"><br>
-                        <span id="billete7">100000</span>
-                    </td>
-                    <td>
-                        <input type="number" id="cantidad7" oninput="calculateRowTotal(7)">
-                    </td>
-                    <td>
-                        <span id="total7">0</span>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr class="total-row">
-                    <td colspan="2">Total:</td>
-                    <td id="grandTotal">$0</td>
-                </tr>
-                <tr>
-                    <td colspan="2">Pago:</td>
-                    <td>
-                        <input type="text" id="pago" oninput="formatPago(); calculateDifference()" placeholder="$0">
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="diferencia">Diferencia:</td>
-                    <td id="diferencia">$0</td>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="table-container">
+            <table>
+                <colgroup>
+                    <col style="width: 120px;"> <!-- Columna de Imágenes -->
+                    <col style="width: 60px;">  <!-- Columna de Cantidad -->
+                    <col style="width: 90px;">  <!-- Columna de Total -->
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>BILLETES</th>
+                        <th>CANTIDAD</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000"><br>
+                            <span id="billete1">1.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad1" oninput="calculateRowTotal(1)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total1">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000"><br>
+                            <span id="billete2">2.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad2" oninput="calculateRowTotal(2)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total2">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.ibb.co/gFzdWgG/b42082633279.jpg" alt="5000"><br>
+                            <span id="billete3">5.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad3" oninput="calculateRowTotal(3)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total3">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000"><br>
+                            <span id="billete4">10.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad4" oninput="calculateRowTotal(4)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total4">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000"><br>
+                            <span id="billete5">20.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad5" oninput="calculateRowTotal(5)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total5">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000"><br>
+                            <span id="billete6">50.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad6" oninput="calculateRowTotal(6)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total6">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="image-cell">
+                            <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000"><br>
+                            <span id="billete7">100.000</span>
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad7" oninput="calculateRowTotal(7)" min="0" max="999">
+                        </td>
+                        <td>
+                            <span id="total7">0</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="2">Total:</td>
+                        <td id="grandTotal">$0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Pago:</td>
+                        <td>
+                            <input type="text" id="pago" oninput="formatPago(); calculateDifference()" placeholder="$0" maxlength="10">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="diferencia">Diferencia:</td>
+                        <td id="diferencia">$0</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </body>
 </html>
