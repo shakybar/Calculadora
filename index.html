@@ -16,25 +16,24 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 0;
-            padding: 10px;
+            padding: 2%;
             background-color: #ffffff;
         }
 
         .formulario-container {
-            max-width: 1200px;
             width: 90%;
             margin: 0 auto;
-            padding: 20px;
+            padding: 2%;
             background-color: #f7f7f7;
             border: 2px solid #f53b2e; /* Rojo fuego */
-            border-top-right-radius: 12px;
-            border-bottom-left-radius: 12px;
+            border-top-right-radius: 1%;
+            border-bottom-left-radius: 1%;
         }
 
         h2 {
             color: #f53b2e;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            margin-bottom: 2%;
+            font-size: 2em;
         }
 
         .table-container {
@@ -47,8 +46,8 @@
             table-layout: fixed;
             border: 2px solid #ccc;
             border-spacing: 0;
-            border-top-right-radius: 12px;
-            border-bottom-left-radius: 12px;
+            border-top-right-radius: 1%;
+            border-bottom-left-radius: 1%;
             overflow: hidden;
         }
 
@@ -65,10 +64,10 @@
 
         th, td {
             border: 0;
-            padding: 5px; /* Reducido de 10px a 5px */
+            padding: 1%; /* Usar porcentaje para padding */
             text-align: center;
             word-wrap: break-word;
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
 
         th {
@@ -82,13 +81,13 @@
 
         .total-row {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.3em;
         }
 
         .diferencia {
             color: red;
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.3em;
         }
 
         .image-cell {
@@ -96,7 +95,7 @@
         }
 
         .image-cell img {
-            width: 180px; /* Reducido un 10% de 200px a 180px */
+            width: 70%; /* Ajustado al 90% del contenedor de la celda */
             max-width: 100%;
             margin-bottom: 0; /* Eliminado margen inferior */
             display: block; /* Para eliminar espacios extra */
@@ -105,70 +104,22 @@
         }
 
         input[type="number"], input[type="text"] {
-            width: 80%;
-            max-width: 80px;
+            width: 80%; /* Usar porcentaje para el ancho */
+            max-width: 100%; /* Asegurar que no exceda el contenedor */
             text-align: center;
-            font-size: 1.1em;
-            padding: 5px;
+            font-size: 1em;
+            padding: 1%; /* Usar porcentaje para padding */
             box-sizing: border-box;
         }
 
         /* Específicamente para el campo "Pago" */
         input[type="text"]#pago {
-            max-width: 200px; /* Establecido un ancho específico */
+            width: 100%; /* Ajustado para ocupar más espacio */
+            max-width: 100%;
         }
 
-        /* Ajustes para pantallas medianas */
-        @media (max-width: 768px) {
-            h2 {
-                font-size: 1.6em;
-                margin-bottom: 15px;
-            }
-            th, td {
-                padding: 3px; /* Reducido el padding para mejor espacio */
-                font-size: 1em;
-            }
-            .image-cell img {
-                width: 150px;
-            }
-            input[type="number"], input[type="text"] {
-                max-width: 60px;
-                font-size: 1em;
-                padding: 4px;
-            }
-            input[type="text"]#pago {
-                max-width: 170px;
-            }
-            .total-row, .diferencia {
-                font-size: 1.1em;
-            }
-        }
+        /* Eliminar media queries para desactivar responsividad */
 
-        /* Ajustes para pantallas pequeñas */
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.4em;
-                margin-bottom: 10px;
-            }
-            th, td {
-                padding: 2px; /* Reducido aún más el padding */
-                font-size: 0.9em;
-            }
-            .image-cell img {
-                width: 100px;
-            }
-            input[type="number"], input[type="text"] {
-                max-width: 50px;
-                font-size: 0.9em;
-                padding: 3px;
-            }
-            input[type="text"]#pago {
-                max-width: 150px;
-            }
-            .total-row, .diferencia {
-                font-size: 1em;
-            }
-        }
     </style>
     <script>
         // Función para calcular el total de cada fila
