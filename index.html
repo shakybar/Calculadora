@@ -5,152 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conteo de Billetes</title>
     <style>
+        /* Reset de márgenes y paddings por defecto */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 5px;
-            padding: 3px;
-            box-sizing: border-box;
-        }
-        .formulario-container {
-            max-width: 100%;
-            margin: 5px;
+            margin: 0;
             padding: 10px;
+            background-color: #ffffff;
+        }
+
+        .formulario-container {
+            max-width: 1200px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
             background-color: #f7f7f7;
             border: 2px solid #f53b2e; /* Rojo fuego */
-            border-top-left-radius: 0;
-            border-bottom-right-radius: 0;
             border-top-right-radius: 12px;
             border-bottom-left-radius: 12px;
-            box-sizing: border-box;
         }
+
         h2 {
-            text-align: center;
-            color: #f53b2e; /* Rojo fuego */
+            color: #f53b2e;
             margin-bottom: 20px;
-            font-size: 1.8em; /* Aumentado el tamaño de la fuente */
+            font-size: 1.8em;
         }
+
         .table-container {
             width: 100%;
             overflow-x: auto;
         }
+
         table {
             width: 100%;
-            table-layout: fixed; /* Distribución fija de columnas */
+            table-layout: fixed;
             border: 2px solid #ccc;
-            border-top-left-radius: 0;
-            border-bottom-right-radius: 0;
+            border-spacing: 0;
             border-top-right-radius: 12px;
             border-bottom-left-radius: 12px;
-            box-sizing: border-box;
+            overflow: hidden;
         }
-        /* Definición de anchos fijos para las columnas */
+
+        /* Definición de anchos relativos para las columnas */
         colgroup col:first-child {
-            width: 130px; /* Aumentado el ancho para la columna de imágenes */
+            width: 50%; /* Columna de Imágenes */
         }
         colgroup col:nth-child(2) {
-            width: 80px; /* Aumentado el ancho para la columna de cantidad */
+            width: 15%; /* Columna de Cantidad */
         }
         colgroup col:nth-child(3) {
-            width: 100px; /* Aumentado el ancho para la columna de total */
+            width: 35%; /* Columna de Total */
         }
+
         th, td {
             border: 0;
-            padding: 2px 4px; /* Reducido el padding para liberar espacio */
+            padding: 5px; /* Reducido de 10px a 5px */
             text-align: center;
             word-wrap: break-word;
-            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
+            font-size: 1.1em;
         }
+
         th {
             background-color: #f2f2f2;
-            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
         }
+
         /* Prevenir el desbordamiento del texto en la columna "CANTIDAD" */
         th:nth-child(2), td:nth-child(2) {
             white-space: nowrap;
         }
+
         .total-row {
             font-weight: bold;
-            font-size: 1.2em; /* Aumentado el tamaño de la fuente */
+            font-size: 1.2em;
         }
+
         .diferencia {
             color: red;
             font-weight: bold;
-            font-size: 1.2em; /* Aumentado el tamaño de la fuente */
+            font-size: 1.2em;
         }
-        .image-cell img {
-            width: 100px; /* Aumentado de 80px a 100px */
-            height: 50px; /* Aumentado de 40px a 50px */
-            max-width: 100%;
-            height: auto;
-        }
-        input[type="number"], input[type="text"] {
-            width: 100%;
-            max-width: 60px; /* Mantener para 'cantidad' (3 dígitos) */
+
+        .image-cell {
             text-align: center;
-            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
-            padding: 2px; /* Reducido el padding */
+        }
+
+        .image-cell img {
+            width: 180px; /* Reducido un 10% de 200px a 180px */
+            max-width: 100%;
+            margin-bottom: 0; /* Eliminado margen inferior */
+            display: block; /* Para eliminar espacios extra */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 80%;
+            max-width: 80px;
+            text-align: center;
+            font-size: 1.1em;
+            padding: 5px;
             box-sizing: border-box;
         }
+
         /* Específicamente para el campo "Pago" */
         input[type="text"]#pago {
-            max-width: 90px; /* Mantener para 'pago' (7 dígitos incluyendo separadores) */
-            font-size: 1.1em; /* Aumentado el tamaño de la fuente */
-            padding: 2px; /* Reducido el padding */
+            max-width: 200px; /* Establecido un ancho específico */
         }
 
         /* Ajustes para pantallas medianas */
         @media (max-width: 768px) {
             h2 {
-                font-size: 1.6em; /* Reducido ligeramente el tamaño de la fuente */
-                margin-bottom: 10px;
+                font-size: 1.6em;
+                margin-bottom: 15px;
             }
             th, td {
-                padding: 1px 2px; /* Reducido el padding */
-                font-size: 1em; /* Reducido el tamaño de la fuente */
-            }
-            .image-cell img {
-                width: 90px; /* Reducido para pantallas medianas */
-                height: 45px;
-            }
-            input[type="number"], input[type="text"] {
-                max-width: 50px; /* Reducido para pantallas medianas */
-                font-size: 1em; /* Ajustado el tamaño de la fuente */
-                padding: 1px; /* Reducido el padding */
-            }
-            input[type="text"]#pago {
-                max-width: 90px; /* Reducido para pantallas medianas */
+                padding: 3px; /* Reducido el padding para mejor espacio */
                 font-size: 1em;
             }
+            .image-cell img {
+                width: 150px;
+            }
+            input[type="number"], input[type="text"] {
+                max-width: 60px;
+                font-size: 1em;
+                padding: 4px;
+            }
+            input[type="text"]#pago {
+                max-width: 170px;
+            }
             .total-row, .diferencia {
-                font-size: 1.1em; /* Ajustado el tamaño de la fuente */
+                font-size: 1.1em;
             }
         }
+
         /* Ajustes para pantallas pequeñas */
         @media (max-width: 480px) {
             h2 {
-                font-size: 1.4em; /* Reducido aún más el tamaño de la fuente */
+                font-size: 1.4em;
                 margin-bottom: 10px;
             }
             th, td {
-                padding: 1px 2px; /* Reducido el padding */
-                font-size: 0.9em; /* Reducido el tamaño de la fuente */
-            }
-            .image-cell img {
-                width: 80px; /* Reducido para pantallas pequeñas */
-                height: 40px;
-            }
-            input[type="number"], input[type="text"] {
-                max-width: 40px; /* Reducido para pantallas pequeñas */
-                font-size: 0.9em; /* Reducido el tamaño de la fuente */
-                padding: 1px; /* Reducido el padding */
-            }
-            input[type="text"]#pago {
-                max-width: 90px; /* Reducido para pantallas pequeñas */
+                padding: 2px; /* Reducido aún más el padding */
                 font-size: 0.9em;
             }
+            .image-cell img {
+                width: 100px;
+            }
+            input[type="number"], input[type="text"] {
+                max-width: 50px;
+                font-size: 0.9em;
+                padding: 3px;
+            }
+            input[type="text"]#pago {
+                max-width: 150px;
+            }
             .total-row, .diferencia {
-                font-size: 1em; /* Reducido el tamaño de la fuente */
+                font-size: 1em;
             }
         }
     </style>
@@ -159,7 +175,8 @@
         function calculateRowTotal(row) {
             const cantidadInput = document.getElementById(`cantidad${row}`);
             const cantidad = parseInt(cantidadInput.value) || 0;
-            const valor = parseInt(document.getElementById(`billete${row}`).innerText.replace(/\./g, '')) || 0;
+            const billeteImg = document.querySelector(`.image-cell img[data-row="${row}"]`);
+            const valor = parseInt(billeteImg.getAttribute('data-value')) || 0;
             const total = cantidad * valor;
             document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');
             calculateGrandTotal();
@@ -205,6 +222,7 @@
             }
 
             pagoInput.value = formatted;
+            calculateDifference();
         }
 
         // Función para calcular la diferencia entre el total y el pago
@@ -220,6 +238,54 @@
             document.getElementById("diferencia").innerText = `$${difference.toLocaleString('es-CO')}`;
             document.getElementById("diferencia").className = difference === 0 ? "" : "diferencia";
         }
+
+        // Función para limitar el ingreso de cantidad a tres dígitos
+        function limitCantidadInput(event) {
+            const input = event.target;
+            if (input.value.length > 3) {
+                input.value = input.value.slice(0, 3);
+            }
+        }
+
+        // Función para limitar el ingreso de pago a 11 dígitos
+        function limitPagoInput(event) {
+            const input = event.target;
+            // Contar solo los dígitos, ignorando otros caracteres como puntos y comas
+            const digits = input.value.replace(/[^0-9]/g, '');
+            if (digits.length > 11) {
+                // Permitir solo los primeros 11 dígitos
+                let newValue = '';
+                let count = 0;
+                for (let i = 0; i < input.value.length; i++) {
+                    if (/\d/.test(input.value[i])) {
+                        if (count < 11) {
+                            newValue += input.value[i];
+                            count++;
+                        }
+                    } else {
+                        newValue += input.value[i];
+                    }
+                }
+                input.value = newValue;
+            }
+        }
+
+        // Añadir event listeners una vez que el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', () => {
+            for (let i = 1; i <= 7; i++) {
+                const cantidadInput = document.getElementById(`cantidad${i}`);
+                cantidadInput.addEventListener('input', limitCantidadInput);
+                cantidadInput.addEventListener('input', () => calculateRowTotal(i));
+            }
+            const pagoInput = document.getElementById('pago');
+            pagoInput.addEventListener('input', formatPago);
+            pagoInput.addEventListener('input', limitPagoInput);
+
+            // **Añadir inputmode mediante JavaScript**
+            pagoInput.setAttribute('inputmode', 'decimal');
+            // Opcional: Añadir pattern para compatibilidad
+            pagoInput.setAttribute('pattern', '\\d*');
+        });
     </script>
 </head>
 <body>
@@ -228,9 +294,9 @@
         <div class="table-container">
             <table>
                 <colgroup>
-                    <col style="width: 130px;"> <!-- Columna de Imágenes -->
-                    <col style="width: 80px;">  <!-- Columna de Cantidad -->
-                    <col style="width: 100px;"> <!-- Columna de Total -->
+                    <col> <!-- Columna de Imágenes -->
+                    <col> <!-- Columna de Cantidad -->
+                    <col> <!-- Columna de Total -->
                 </colgroup>
                 <thead>
                     <tr>
@@ -242,11 +308,10 @@
                 <tbody>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000"><br>
-                            <span id="billete1">1.000</span>
+                            <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000" data-value="1000" data-row="1">
                         </td>
                         <td>
-                            <input type="number" id="cantidad1" oninput="calculateRowTotal(1)" min="0" max="999">
+                            <input type="number" id="cantidad1" min="0" max="999">
                         </td>
                         <td>
                             <span id="total1">0</span>
@@ -254,11 +319,10 @@
                     </tr>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000"><br>
-                            <span id="billete2">2.000</span>
+                            <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000" data-value="2000" data-row="2">
                         </td>
                         <td>
-                            <input type="number" id="cantidad2" oninput="calculateRowTotal(2)" min="0" max="999">
+                            <input type="number" id="cantidad2" min="0" max="999">
                         </td>
                         <td>
                             <span id="total2">0</span>
@@ -266,11 +330,10 @@
                     </tr>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.ibb.co/gFzdWgG/b42082633279.jpg" alt="5000"><br>
-                            <span id="billete3">5.000</span>
+                            <img src="https://i.ibb.co/gFzdWgG/b42082633279.jpg" alt="5000" data-value="5000" data-row="3">
                         </td>
                         <td>
-                            <input type="number" id="cantidad3" oninput="calculateRowTotal(3)" min="0" max="999">
+                            <input type="number" id="cantidad3" min="0" max="999">
                         </td>
                         <td>
                             <span id="total3">0</span>
@@ -278,11 +341,10 @@
                     </tr>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000"><br>
-                            <span id="billete4">10.000</span>
+                            <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000" data-value="10000" data-row="4">
                         </td>
                         <td>
-                            <input type="number" id="cantidad4" oninput="calculateRowTotal(4)" min="0" max="999">
+                            <input type="number" id="cantidad4" min="0" max="999">
                         </td>
                         <td>
                             <span id="total4">0</span>
@@ -290,11 +352,10 @@
                     </tr>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000"><br>
-                            <span id="billete5">20.000</span>
+                            <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000" data-value="20000" data-row="5">
                         </td>
                         <td>
-                            <input type="number" id="cantidad5" oninput="calculateRowTotal(5)" min="0" max="999">
+                            <input type="number" id="cantidad5" min="0" max="999">
                         </td>
                         <td>
                             <span id="total5">0</span>
@@ -302,11 +363,10 @@
                     </tr>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000"><br>
-                            <span id="billete6">50.000</span>
+                            <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000" data-value="50000" data-row="6">
                         </td>
                         <td>
-                            <input type="number" id="cantidad6" oninput="calculateRowTotal(6)" min="0" max="999">
+                            <input type="number" id="cantidad6" min="0" max="999">
                         </td>
                         <td>
                             <span id="total6">0</span>
@@ -314,11 +374,10 @@
                     </tr>
                     <tr>
                         <td class="image-cell">
-                            <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000"><br>
-                            <span id="billete7">100.000</span>
+                            <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000" data-value="100000" data-row="7">
                         </td>
                         <td>
-                            <input type="number" id="cantidad7" oninput="calculateRowTotal(7)" min="0" max="999">
+                            <input type="number" id="cantidad7" min="0" max="999">
                         </td>
                         <td>
                             <span id="total7">0</span>
@@ -333,11 +392,11 @@
                     <tr>
                         <td colspan="2">Pago:</td>
                         <td>
-                            <input type="text" id="pago" oninput="formatPago(); calculateDifference()" placeholder="$0" maxlength="10">
+                            <input type="text" id="pago" placeholder="$0" maxlength="11">
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="diferencia">Diferencia:</td>
+                        <td colspan="2">Diferencia:</td>
                         <td id="diferencia">$0</td>
                     </tr>
                 </tfoot>
