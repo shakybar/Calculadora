@@ -12,13 +12,13 @@ const urlsToCache = [
 
 // Instalación del Service Worker
 self.addEventListener('install', (event) => {
-  // Realizamos la instalación y almacenamos los archivos que queremos cachear
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Archivos cacheados');
         return cache.addAll(urlsToCache);
       })
+      .then(() => self.skipWaiting()) // Activa el nuevo Service Worker inmediatamente
   );
 });
 
@@ -36,6 +36,7 @@ self.addEventListener('activate', (event) => {
         })
       );
     })
+    .then(() => self.clients.claim()) // Controla las pestañas abiertas
   );
 });
 
@@ -49,7 +50,15 @@ self.addEventListener('fetch', (event) => {
           return cachedResponse;
         }
         // Si no está en cache, se hace la solicitud a la red
-        return fetch(event.request);
+        return fetch(event.request).then((networkResponse) => {
+          // Cacheamos los nuevos recursos de la red para usarlos en futuras solicitudes
+          if (event.request.url.startsWith(self.location.origin)) {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, networkResponse.clone());
+            });
+          }
+          return networkResponse;
+        });
       })
   );
 });
