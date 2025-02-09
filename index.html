@@ -1,380 +1,439 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>PWA Name App</title>
-  <meta name="description" content="Esta sería la descripción de mi PWA">
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">  
+  <title>PWA Name App</title>  
+  <meta name="description" content="Esta sería la descripción de mi PWA">  
+  <meta name="theme-color" content="#2196F3">  
+  <meta name="MobileOptimized" content="width">  
+  <meta name="HandheldFriendly" content="true">  
+  <meta name="mobile-web-app-capable" content="yes">  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">  
+  <link rel="shortcut icon" type="image/png" href="img/mainlogo.png">  
+  <link rel="apple-touch-icon" href="img/mainlogo.png">  
+  <link rel="apple-touch-startup-image" href="img/mainlogo.png">  
+  <link rel="manifest" href="./manifest.json">  
+  <title>Conteo de Billetes</title>  
+  <style>  
+    body {  
+      font-family: Arial, sans-serif;  
+      text-align: center;  
+      margin: 0;  
+      padding: 1px;  
+      background-color: #ffffff;  
+    }  
 
-  <meta name="theme-color" content="#2196F3">
-  <meta name="MobileOptimized" content="width">
-  <meta name="HandheldFriendly" content="true">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="shortcut icon" type="image/png" href="img/mainlogo.png">
-  <link rel="apple-touch-icon" href="img/mainlogo.png">
-  <link rel="apple-touch-startup-image" href="img/mainlogo.png">
-  <link rel="manifest" href="./manifest.json">
-    <title>Conteo de Billetes</title>
-    <style>
+    .formulario-container {  
+      width: 90%;  
+      margin: 0 auto;  
+      padding: 2%;  
+      background-color: #f7f7f7;  
+      border: 2px solid #f53b2e; /* Rojo fuego */  
+      border-top-right-radius: 1%;  
+      border-bottom-left-radius: 1%;  
+    }  
 
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 2%;
-            background-color: #ffffff;
-        }
+    h2 {  
+      color: #f53b2e;  
+      margin-bottom: 2%;  
+      font-size: 2rem;  
+    }  
 
-        .formulario-container {
-            width: 90%;
-            margin: 0 auto;
-            padding: 2%;
-            background-color: #f7f7f7;
-            border: 2px solid #f53b2e; /* Rojo fuego */
-            border-top-right-radius: 1%;
-            border-bottom-left-radius: 1%;
-        }
+    .table-container {  
+      width: 100%;  
+      overflow-x: auto;  
+    }  
 
-        h2 {
-            color: #f53b2e;
-            margin-bottom: 2%;
-            font-size: 2em;
-        }
+    table {  
+      width: 100%;  
+      table-layout: fixed;  
+      border: 2px solid #ccc;  
+      border-spacing: 0;  
+      border-top-right-radius: 1%;  
+      border-bottom-left-radius: 1%;  
+      overflow: hidden;  
+    }  
 
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-        }
+    /* Definición de anchos relativos para las columnas */  
+    colgroup col:first-child {  
+      width: 50%; /* Columna de Imágenes */  
+    }  
+    colgroup col:nth-child(2) {  
+      width: 15%; /* Columna de Cantidad */  
+    }  
+    colgroup col:nth-child(3) {  
+      width: 35%; /* Columna de Total */  
+    }  
 
-        table {
-            width: 100%;
-            table-layout: fixed;
-            border: 2px solid #ccc;
-            border-spacing: 0;
-            border-top-right-radius: 1%;
-            border-bottom-left-radius: 1%;
-            overflow: hidden;
-        }
+    th, td {  
+      border: 0;  
+      padding: 1%; /* Usar porcentaje para padding */  
+      text-align: center;  
+      word-wrap: break-word;  
+      font-size: 1rem;  
+    }  
 
-        /* Definición de anchos relativos para las columnas */
-        colgroup col:first-child {
-            width: 50%; /* Columna de Imágenes */
-        }
-        colgroup col:nth-child(2) {
-            width: 15%; /* Columna de Cantidad */
-        }
-        colgroup col:nth-child(3) {
-            width: 35%; /* Columna de Total */
-        }
+    th {  
+      background-color: #f2f2f2;  
+    }  
 
-        th, td {
-            border: 0;
-            padding: 1%; /* Usar porcentaje para padding */
-            text-align: center;
-            word-wrap: break-word;
-            font-size: 1.2em;
-        }
+    /* Prevenir el desbordamiento del texto en la columna "CANTIDAD" */  
+    th:nth-child(2), td:nth-child(2) {  
+      white-space: nowrap;  
+    }  
 
-        th {
-            background-color: #f2f2f2;
-        }
+    .total-row {  
+      font-weight: bold;  
+      font-size: 1.3em;  
+    }  
 
-        /* Prevenir el desbordamiento del texto en la columna "CANTIDAD" */
-        th:nth-child(2), td:nth-child(2) {
-            white-space: nowrap;
-        }
+    .diferencia {  
+      color: red;  
+      font-weight: bold;  
+      font-size: 1.3em;  
+    }  
 
-        .total-row {
-            font-weight: bold;
-            font-size: 1.3em;
-        }
+    .image-cell {  
+      text-align: center;  
+    }  
 
-        .diferencia {
-            color: red;
-            font-weight: bold;
-            font-size: 1.3em;
-        }
+    .image-cell img {  
+      width: 70%; /* Ajustado al 70% del contenedor de la celda */  
+      max-width: 100%;  
+      margin-bottom: 0; /* Eliminado margen inferior */  
+      display: block; /* Para eliminar espacios extra */  
+      margin-left: auto;  
+      margin-right: auto;  
+    }  
 
-        .image-cell {
-            text-align: center;
-        }
+    input[type="number"], input[type="text"] {  
+      width: 80%; /* Usar porcentaje para el ancho */  
+      max-width: 100%; /* Asegurar que no exceda el contenedor */  
+      text-align: center;  
+      font-size: 1em;  
+      padding: 1%; /* Usar porcentaje para padding */  
+      box-sizing: border-box;  
+    }  
 
-        .image-cell img {
-            width: 70%; /* Ajustado al 90% del contenedor de la celda */
-            max-width: 100%;
-            margin-bottom: 0; /* Eliminado margen inferior */
-            display: block; /* Para eliminar espacios extra */
-            margin-left: auto;
-            margin-right: auto;
-        }
+    /* Específicamente para el campo "Pago" */  
+    input[type="text"]#pago {  
+      width: 100%; /* Ajustado para ocupar más espacio */  
+      max-width: 100%;  
+    }  
 
-        input[type="number"], input[type="text"] {
-            width: 80%; /* Usar porcentaje para el ancho */
-            max-width: 100%; /* Asegurar que no exceda el contenedor */
-            text-align: center;
-            font-size: 1em;
-            padding: 1%; /* Usar porcentaje para padding */
-            box-sizing: border-box;
-        }
+    /* Eliminar media queries para desactivar responsividad */  
 
-        /* Específicamente para el campo "Pago" */
-        input[type="text"]#pago {
-            width: 100%; /* Ajustado para ocupar más espacio */
-            max-width: 100%;
-        }
+    /* Estilo para el botón de borrar contenido */  
+    #clearButton {  
+      margin-top: 20px;  
+      padding: 10px 20px;  
+      font-size: 1rem;  
+      background-color: #f53b2e;  
+      color: #fff;  
+      border: none;  
+      border-radius: 5px;  
+      cursor: pointer;  
+    }  
 
-        /* Eliminar media queries para desactivar responsividad */
+    #clearButton:hover {  
+      background-color: #d94126;  
+    }  
+  </style>  
+  <script>  
+    // Registro del Service Worker  
+    if ('serviceWorker' in navigator) {  
+      window.addEventListener('load', () => {  
+        navigator.serviceWorker.register('./sw.js')  
+          .then((registration) => {  
+            console.log('Service Worker registrado con éxito:', registration);  
+          })  
+          .catch((error) => {  
+            console.log('Error al registrar el Service Worker:', error);  
+          });  
+      });  
+    }  
 
-    </style>
-    <script>
+    // Función para calcular el total de cada fila  
+    function calculateRowTotal(row) {  
+      const cantidadInput = document.getElementById(`cantidad${row}`);  
+      const cantidad = parseInt(cantidadInput.value) || 0;  
+      const billeteImg = document.querySelector(`.image-cell img[data-row="${row}"]`);  
+      const valor = parseInt(billeteImg.getAttribute('data-value')) || 0;  
+      const total = cantidad * valor;  
+      document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');  
+      calculateGrandTotal();  
+    }  
 
+    // Función para calcular el total general  
+    function calculateGrandTotal() {  
+      let grandTotal = 0;  
+      for (let i = 1; i <= 7; i++) {  
+        const totalText = document.getElementById(`total${i}`).innerText;  
+        const total = parseInt(totalText.replace(/\./g, '').replace('$', '')) || 0;  
+        grandTotal += total;  
+      }  
+      document.getElementById("grandTotal").innerText = `$${grandTotal.toLocaleString('es-CO')}`;  
+      calculateDifference();  
+    }  
 
-        
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then((registration) => {
-          console.log('Service Worker registrado con éxito:', registration);
-        })
-        .catch((error) => {
-          console.log('Error al registrar el Service Worker:', error);
-        });
-    });
-  }
+    // Función para formatear el campo "Pago" y calcular la diferencia  
+    function formatPago() {  
+      let pagoInput = document.getElementById('pago');  
+      let value = pagoInput.value;  
 
-        // Función para calcular el total de cada fila
-        function calculateRowTotal(row) {
-            const cantidadInput = document.getElementById(`cantidad${row}`);
-            const cantidad = parseInt(cantidadInput.value) || 0;
-            const billeteImg = document.querySelector(`.image-cell img[data-row="${row}"]`);
-            const valor = parseInt(billeteImg.getAttribute('data-value')) || 0;
-            const total = cantidad * valor;
-            document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');
-            calculateGrandTotal();
-        }
+      // Eliminar todos los caracteres excepto dígitos y comas  
+      let cleaned = value.replace(/[^0-9,]/g, '');  
 
-        // Función para calcular el total general
-        function calculateGrandTotal() {
-            let grandTotal = 0;
-            for (let i = 1; i <= 7; i++) {
-                const totalText = document.getElementById(`total${i}`).innerText;
-                const total = parseInt(totalText.replace(/\./g, '').replace('$', '')) || 0;
-                grandTotal += total;
-            }
-            document.getElementById("grandTotal").innerText = `$${grandTotal.toLocaleString('es-CO')}`;
-            calculateDifference();
-        }
+      // Dividir en parte entera y decimal  
+      let parts = cleaned.split(',');  
+      let integerPart = parts[0];  
+      let decimalPart = parts[1] || '';  
 
-        // Función para formatear el campo "Pago" y calcular la diferencia
-        function formatPago() {
-            let pagoInput = document.getElementById('pago');
-            let value = pagoInput.value;
+      // Agregar separadores de miles  
+      integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');  
 
-            // Eliminar todos los caracteres excepto dígitos y comas
-            let cleaned = value.replace(/[^0-9,]/g, '');
+      // Limitar a dos decimales  
+      if (decimalPart.length > 2) {  
+        decimalPart = decimalPart.substring(0, 2);  
+      }  
 
-            // Dividir en parte entera y decimal
-            let parts = cleaned.split(',');
-            let integerPart = parts[0];
-            let decimalPart = parts[1] || '';
+      // Combinar las partes y agregar el signo de pesos  
+      let formatted = '$' + integerPart;  
+      if (decimalPart.length > 0) {  
+        formatted += ',' + decimalPart;  
+      }  
 
-            // Agregar separadores de miles
-            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      pagoInput.value = formatted;  
+      calculateDifference();  
+    }  
 
-            // Limitar a dos decimales
-            if (decimalPart.length > 2) {
-                decimalPart = decimalPart.substring(0, 2);
-            }
+    // Función para calcular la diferencia entre el total y el pago  
+    function calculateDifference() {  
+      const grandTotalText = document.getElementById("grandTotal").innerText;  
+      const grandTotal = parseInt(grandTotalText.replace(/\./g, '').replace('$', '')) || 0;  
 
-            // Combinar las partes y agregar el signo de pesos
-            let formatted = '$' + integerPart;
-            if (decimalPart.length > 0) {
-                formatted += ',' + decimalPart;
-            }
+      const pagoInput = document.getElementById("pago").value;  
+      // Eliminar caracteres de formato para obtener el número  
+      let pago = parseFloat(pagoInput.replace(/\./g, '').replace(',', '.').replace('$', '')) || 0;  
 
-            pagoInput.value = formatted;
-            calculateDifference();
-        }
+      const difference = grandTotal - pago;  
+      document.getElementById("diferencia").innerText = `$${difference.toLocaleString('es-CO')}`;  
+      document.getElementById("diferencia").className = difference === 0 ? "" : "diferencia";  
+    }  
 
-        // Función para calcular la diferencia entre el total y el pago
-        function calculateDifference() {
-            const grandTotalText = document.getElementById("grandTotal").innerText;
-            const grandTotal = parseInt(grandTotalText.replace(/\./g, '').replace('$', '')) || 0;
+    // Función para limitar el ingreso de cantidad a tres dígitos  
+    function limitCantidadInput(event) {  
+      const input = event.target;  
+      if (input.value.length > 3) {  
+        input.value = input.value.slice(0, 3);  
+      }  
+    }  
 
-            const pagoInput = document.getElementById("pago").value;
-            // Eliminar caracteres de formato para obtener el número
-            let pago = parseFloat(pagoInput.replace(/\./g, '').replace(',', '.').replace('$', '')) || 0;
+    // Función para limitar el ingreso de pago a 11 dígitos  
+    function limitPagoInput(event) {  
+      const input = event.target;  
+      // Contar solo los dígitos, ignorando otros caracteres como puntos y comas  
+      const digits = input.value.replace(/[^0-9]/g, '');  
+      if (digits.length > 11) {  
+        // Permitir solo los primeros 11 dígitos  
+        let newValue = '';  
+        let count = 0;  
+        for (let i = 0; i < input.value.length; i++) {  
+          if (/\d/.test(input.value[i])) {  
+            if (count < 11) {  
+              newValue += input.value[i];  
+              count++;  
+            }  
+          } else {  
+            newValue += input.value[i];  
+          }  
+        }  
+        input.value = newValue;  
+      }  
+    }  
 
-            const difference = grandTotal - pago;
-            document.getElementById("diferencia").innerText = `$${difference.toLocaleString('es-CO')}`;
-            document.getElementById("diferencia").className = difference === 0 ? "" : "diferencia";
-        }
+    // Función para cargar los datos persistidos (localStorage)  
+    function loadPersistedData() {  
+      for (let i = 1; i <= 7; i++) {  
+        const savedValue = localStorage.getItem(`cantidad${i}`);  
+        if (savedValue !== null) {  
+          document.getElementById(`cantidad${i}`).value = savedValue;  
+          calculateRowTotal(i);  
+        }  
+      }  
+      const savedPago = localStorage.getItem('pago');  
+      if (savedPago !== null) {  
+        document.getElementById('pago').value = savedPago;  
+        calculateDifference();  
+      }  
+    }  
 
-        // Función para limitar el ingreso de cantidad a tres dígitos
-        function limitCantidadInput(event) {
-            const input = event.target;
-            if (input.value.length > 3) {
-                input.value = input.value.slice(0, 3);
-            }
-        }
+    // Función para borrar los datos (inputs y localStorage)  
+    function clearData() {  
+      // Limpiar cada input y el total de cada fila  
+      for (let i = 1; i <= 7; i++) {  
+        localStorage.removeItem(`cantidad${i}`);  
+        document.getElementById(`cantidad${i}`).value = "";  
+        document.getElementById(`total${i}`).innerText = "0";  
+      }  
+      localStorage.removeItem('pago');  
+      document.getElementById('pago').value = "";  
+      document.getElementById("grandTotal").innerText = "$0";  
+      document.getElementById("diferencia").innerText = "$0";  
+    }  
 
-        // Función para limitar el ingreso de pago a 11 dígitos
-        function limitPagoInput(event) {
-            const input = event.target;
-            // Contar solo los dígitos, ignorando otros caracteres como puntos y comas
-            const digits = input.value.replace(/[^0-9]/g, '');
-            if (digits.length > 11) {
-                // Permitir solo los primeros 11 dígitos
-                let newValue = '';
-                let count = 0;
-                for (let i = 0; i < input.value.length; i++) {
-                    if (/\d/.test(input.value[i])) {
-                        if (count < 11) {
-                            newValue += input.value[i];
-                            count++;
-                        }
-                    } else {
-                        newValue += input.value[i];
-                    }
-                }
-                input.value = newValue;
-            }
-        }
+    // Añadir event listeners una vez que el DOM esté cargado  
+    document.addEventListener('DOMContentLoaded', () => {  
+      for (let i = 1; i <= 7; i++) {  
+        const cantidadInput = document.getElementById(`cantidad${i}`);  
+        cantidadInput.addEventListener('input', limitCantidadInput);  
+        cantidadInput.addEventListener('input', () => calculateRowTotal(i));  
+        // Al modificar el input, guardar el valor en localStorage  
+        cantidadInput.addEventListener('input', () => {  
+          localStorage.setItem(`cantidad${i}`, cantidadInput.value);  
+        });  
+      }  
+      const pagoInput = document.getElementById('pago');  
+      pagoInput.addEventListener('input', formatPago);  
+      pagoInput.addEventListener('input', limitPagoInput);  
+      // Al modificar el pago, guardar el valor en localStorage  
+      pagoInput.addEventListener('input', () => {  
+        localStorage.setItem('pago', pagoInput.value);  
+      });  
 
-        // Añadir event listeners una vez que el DOM esté cargado
-        document.addEventListener('DOMContentLoaded', () => {
-            for (let i = 1; i <= 7; i++) {
-                const cantidadInput = document.getElementById(`cantidad${i}`);
-                cantidadInput.addEventListener('input', limitCantidadInput);
-                cantidadInput.addEventListener('input', () => calculateRowTotal(i));
-            }
-            const pagoInput = document.getElementById('pago');
-            pagoInput.addEventListener('input', formatPago);
-            pagoInput.addEventListener('input', limitPagoInput);
+      // **Añadir inputmode mediante JavaScript**  
+      pagoInput.setAttribute('inputmode', 'decimal');  
+      // Opcional: Añadir pattern para compatibilidad  
+      pagoInput.setAttribute('pattern', '\\d*');  
 
-            // **Añadir inputmode mediante JavaScript**
-            pagoInput.setAttribute('inputmode', 'decimal');
-            // Opcional: Añadir pattern para compatibilidad
-            pagoInput.setAttribute('pattern', '\\d*');
-        });
-    </script>
-</head>
-<body>
-    <div class="formulario-container">
-        <h2>Conteo de Billetes</h2>
-        <div class="table-container">
-            <table>
-                <colgroup>
-                    <col> <!-- Columna de Imágenes -->
-                    <col> <!-- Columna de Cantidad -->
-                    <col> <!-- Columna de Total -->
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>BILLETES</th>
-                        <th>CANTIDAD</th>
-                        <th>TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000" data-value="1000" data-row="1">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad1" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total1">0</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000" data-value="2000" data-row="2">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad2" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total2">0</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.ibb.co/gFzdWgG/b42082633279.jpg" alt="5000" data-value="5000" data-row="3">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad3" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total3">0</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000" data-value="10000" data-row="4">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad4" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total4">0</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000" data-value="20000" data-row="5">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad5" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total5">0</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000" data-value="50000" data-row="6">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad6" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total6">0</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="image-cell">
-                            <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000" data-value="100000" data-row="7">
-                        </td>
-                        <td>
-                            <input type="number" id="cantidad7" min="0" max="999">
-                        </td>
-                        <td>
-                            <span id="total7">0</span>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="total-row">
-                        <td colspan="2">Total:</td>
-                        <td id="grandTotal">$0</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Pago:</td>
-                        <td>
-                            <input type="text" id="pago" placeholder="$0" maxlength="11">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Diferencia:</td>
-                        <td id="diferencia">$0</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-</body>
+      // Cargar datos persistidos (si existen)  
+      loadPersistedData();  
+
+      // Agregar event listener al botón de borrar contenido  
+      document.getElementById('clearButton').addEventListener('click', () => {  
+        clearData();  
+      });  
+    });  
+  </script>  
+</head>  
+<body>  
+  <div class="formulario-container">  
+    <h2>Conteo de Billetes</h2>  
+    <div class="table-container">  
+      <table>  
+        <colgroup>  
+          <col> <!-- Columna de Imágenes -->  
+          <col> <!-- Columna de Cantidad -->  
+          <col> <!-- Columna de Total -->  
+        </colgroup>  
+        <thead>  
+          <tr>  
+            <th>BILLETES</th>  
+            <th>CANTIDAD</th>  
+            <th>TOTAL</th>  
+          </tr>  
+        </thead>  
+        <tbody>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000" data-value="1000" data-row="1">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad1" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total1">0</span>  
+            </td>  
+          </tr>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000" data-value="2000" data-row="2">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad2" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total2">0</span>  
+            </td>  
+          </tr>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.ibb.co/BVZwSB8S/5df7617506ee.jpg" alt="5000" data-value="5000" data-row="3">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad3" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total3">0</span>  
+            </td>  
+          </tr>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000" data-value="10000" data-row="4">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad4" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total4">0</span>  
+            </td>  
+          </tr>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000" data-value="20000" data-row="5">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad5" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total5">0</span>  
+            </td>  
+          </tr>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000" data-value="50000" data-row="6">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad6" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total6">0</span>  
+            </td>  
+          </tr>  
+          <tr>  
+            <td class="image-cell">  
+              <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000" data-value="100000" data-row="7">  
+            </td>  
+            <td>  
+              <input type="number" id="cantidad7" min="0" max="999">  
+            </td>  
+            <td>  
+              <span id="total7">0</span>  
+            </td>  
+          </tr>  
+        </tbody>  
+        <tfoot>  
+          <tr class="total-row">  
+            <td colspan="2">Total:</td>  
+            <td id="grandTotal">$0</td>  
+          </tr>  
+          <tr>  
+            <td colspan="2">Pago:</td>  
+            <td>  
+              <input type="text" id="pago" placeholder="$0" maxlength="11">  
+            </td>  
+          </tr>  
+          <tr>  
+            <td colspan="2">Diferencia:</td>  
+            <td id="diferencia">$0</td>  
+          </tr>  
+        </tfoot>  
+      </table>  
+      <!-- Botón para borrar el contenido y los datos persistidos -->  
+      <button id="clearButton" type="button">Borrar contenido</button>  
+    </div>  
+  </div>  
+</body>  
 </html>
