@@ -1,7 +1,7 @@
 {
   "name": "Calculadora de Billetes",
   "short_name": "ContB",
-  "description": "Esta sería la descripción de mi PWA",
+  "description": "Calculadora de Billetes con opción de Enviar Resumen",
   "background_color": "#2B2B2B",
   "theme_color": "#2196F3",
   "orientation": "portrait",
