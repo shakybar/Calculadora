@@ -57,10 +57,10 @@
 
     /* Definición de anchos relativos para las columnas */  
     colgroup col:first-child {  
-      width: 50%; /* Columna de Imágenes */  
+      width: 40%; /* Columna de Imágenes */  
     }  
     colgroup col:nth-child(2) {  
-      width: 15%; /* Columna de Cantidad */  
+      width: 25%; /* Columna de Cantidad */  
     }  
     colgroup col:nth-child(3) {  
       width: 35%; /* Columna de Total */  
@@ -107,7 +107,12 @@
       margin-right: auto;  
     }  
 
-    input[type="number"], input[type="text"] {  
+    /* ESTILOS DE INPUTS 
+       Se incluye input[inputmode="decimal"] para dar soporte a los nuevos campos inteligentes.
+    */
+    input[type="number"], 
+    input[type="text"], 
+    input[inputmode="decimal"] {  
       width: 80%; /* Usar porcentaje para el ancho */  
       max-width: 100%; /* Asegurar que no exceda el contenedor */  
       text-align: center;  
@@ -215,8 +220,6 @@
     /* ===============================================
        CONFIGURACIÓN (Fuente de verdad)
        ===============================================
-       Mapeamos el ID de la fila (1-7) con el valor real del billete.
-       Esto evita leer texto del HTML para hacer cálculos.
     */
     const DENOMINACIONES = {
       1: 1000,
@@ -241,29 +244,64 @@
       });  
     }  
 
+    /* ===============================================
+       PARSER DE CALCULADORA INTELIGENTE
+       ===============================================
+       Convierte "10 5" en 15 y "10 -2" en 8.
+       Usa el espacio como operador de suma.
+    */
+    function parseSmartInput(value) {
+      if (!value) return 0;
+      
+      // 1. Limpieza: Solo permitimos números, espacios y guiones.
+      let cleanValue = value.replace(/[^0-9\s-]/g, '');
+
+      // 2. Regla de negocio: "Espacio es suma".
+      // Reemplazamos espacios por '+'.
+      let expression = cleanValue.replace(/\s+/g, '+');
+
+      // 3. Resolver matemática segura.
+      try {
+        // Si termina en operador (ej "10+"), devolvemos 0 temporalmente para no dar error
+        if (/[+-]$/.test(expression)) return 0;
+        
+        // Evaluamos la expresión matemática
+        const result = new Function('return ' + expression)();
+        return parseInt(result) || 0;
+      } catch (e) {
+        return 0;
+      }
+    }
+
     // Función para calcular el total de cada fila  
     function calculateRowTotal(row) {  
-      const cantidadInput = document.getElementById(`cantidad${row}`);  
-      const cantidad = parseInt(cantidadInput.value) || 0;  
+      const cantidadInput = document.getElementById(`cantidad${row}`);
       
-      // OPTIMIZACIÓN: Usamos el valor desde la configuración, no del DOM
+      // USAMOS EL PARSER INTELIGENTE
+      const cantidadCalculada = parseSmartInput(cantidadInput.value);
+      
+      // Evitar negativos en el cálculo final si se desea (opcional)
+      const cantidad = cantidadCalculada < 0 ? 0 : cantidadCalculada;
+
+      // Obtener valor de la configuración
       const valor = DENOMINACIONES[row] || 0;
       
       const total = cantidad * valor;  
       document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');  
       
-      // Recalcular total general
       calculateGrandTotal();  
     }  
 
-    // Función para calcular el total general (Optimizada)
+    // Función para calcular el total general (Robusta + Parser)
     function calculateGrandTotal() {  
       let grandTotal = 0;  
       
-      // Iteramos sobre nuestra configuración para sumar todo
       for (const [rowId, valorBillete] of Object.entries(DENOMINACIONES)) {
         const cantidadInput = document.getElementById(`cantidad${rowId}`);
-        const cantidad = parseInt(cantidadInput.value) || 0;
+        // Usamos el parser también aquí para asegurar consistencia
+        const cantidadCalculada = parseSmartInput(cantidadInput.value);
+        const cantidad = cantidadCalculada < 0 ? 0 : cantidadCalculada;
+        
         grandTotal += (cantidad * valorBillete);
       }
       
@@ -301,14 +339,6 @@
       const difference = grandTotal - pago;  
       document.getElementById("diferencia").innerText = `$${difference.toLocaleString('es-CO')}`;  
       document.getElementById("diferencia").className = difference === 0 ? "" : "diferencia";  
-    }  
-
-    // Función para limitar el ingreso de cantidad a tres dígitos  
-    function limitCantidadInput(event) {  
-      const input = event.target;  
-      if (input.value.length > 3) {  
-        input.value = input.value.slice(0, 3);  
-      }  
     }  
 
     // Función para limitar el ingreso de pago a 11 dígitos  
@@ -374,7 +404,6 @@
 
     function sendWhatsAppSummary(event) {
       event.preventDefault();
-      // Obtener los datos ingresados en el formulario del modal
       const userName = document.getElementById('userName').value.trim();
       const userReason = document.getElementById('userReason').value.trim();
       if (!userName || !userReason) {
@@ -382,7 +411,6 @@
         return;
       }
       
-      // Obtener la fecha y hora actual en el formato requerido
       const now = new Date();
       const dias = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
       const meses = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -393,21 +421,18 @@
       const minutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
       const timestamp = "\u{1F4C5} " + `${dayName}, ${day} de ${month} ${hours}:${minutes}`;
 
-      // Construir el mensaje resumen utilizando secuencias Unicode para los emojis
       let message = "\u{1F4CC} *Conteo* \u{1F4CC}\n\n";
       message += `${timestamp}\n\n`;
       message += `Nombre: ${userName}\n`;
       message += `Motivo: ${userReason}\n\n`;
       message += `Resumen:\n`;
       
-      // Agregar detalles de cada fila (billete, cantidad y total)
       for (let i = 1; i <= 7; i++) {
-        // Para el mensaje seguimos tomando el valor visual del atributo por conveniencia
-        // o podríamos usar DENOMINACIONES[i] si quisiéramos uniformidad total.
-        // Mantenemos la lógica visual original aquí para no alterar el formato del mensaje.
         const imgElement = document.querySelector(`.image-cell img[data-row="${i}"]`);
         const billValue = imgElement.getAttribute('data-value');
+        // Para el reporte usamos el valor visible (que puede tener espacios "10 5")
         const cantidad = document.getElementById(`cantidad${i}`).value || "0";
+        // Si quieres mostrar la cantidad sumada real, usa parseSmartInput(cantidad)
         const total = document.getElementById(`total${i}`).innerText || "0";
         message += `${billValue}: Cantidad ${cantidad} = ${total}\n`;
       }
@@ -415,24 +440,25 @@
       message += `Pago: ${document.getElementById("pago").value || "$0"}\n`;
       message += `Diferencia: ${document.getElementById("diferencia").innerText}\n`;
 
-      // Abrir WhatsApp con el mensaje preformateado  
       const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(whatsappURL, '_blank');
-
-      // Cerrar el modal
       closeModal();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Configuración de inputs de billetes
       for (let i = 1; i <= 7; i++) {
         const cantidadInput = document.getElementById(`cantidad${i}`);
-        cantidadInput.addEventListener('input', limitCantidadInput);
-        // calculateRowTotal ahora es más eficiente
+        
+        // Ya NO limitamos caracteres, porque queremos permitir fórmulas
+        // Se calcula al escribir
         cantidadInput.addEventListener('input', () => calculateRowTotal(i));
         cantidadInput.addEventListener('input', () => {
           localStorage.setItem(`cantidad${i}`, cantidadInput.value);
         });
       }
+
+      // Configuración del input de Pago
       const pagoInput = document.getElementById('pago');
       pagoInput.addEventListener('input', formatPago);
       pagoInput.addEventListener('input', limitPagoInput);
@@ -448,15 +474,12 @@
         clearData();
       });
 
-      // Abrir el modal para enviar el resumen por WhatsApp
       document.getElementById('whatsappButton').addEventListener('click', () => {
         openModal();
       });
 
-      // Enviar el resumen al hacer submit en el formulario del modal
       document.getElementById('modalForm').addEventListener('submit', sendWhatsAppSummary);
 
-      // Cerrar el modal al hacer clic en la "X"
       document.getElementById('modalClose').addEventListener('click', closeModal);
     });
   </script>  
@@ -481,7 +504,7 @@
               <img src="https://i.postimg.cc/BQ4BSP36/1000.jpg" alt="1000" data-value="1000" data-row="1">  
             </td>  
             <td>  
-              <input type="number" id="cantidad1" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad1" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total1">0</span>  
@@ -492,7 +515,7 @@
               <img src="https://i.ibb.co/zrSRSLy/2000.jpg" alt="2000" data-value="2000" data-row="2">  
             </td>  
             <td>  
-              <input type="number" id="cantidad2" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad2" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total2">0</span>  
@@ -503,7 +526,7 @@
               <img src="https://i.ibb.co/BVZwSB8S/5df7617506ee.jpg" alt="5000" data-value="5000" data-row="3">  
             </td>  
             <td>  
-              <input type="number" id="cantidad3" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad3" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total3">0</span>  
@@ -514,7 +537,7 @@
               <img src="https://i.ibb.co/pP7LNrp/10000.jpg" alt="10000" data-value="10000" data-row="4">  
             </td>  
             <td>  
-              <input type="number" id="cantidad4" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad4" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total4">0</span>  
@@ -525,7 +548,7 @@
               <img src="https://i.ibb.co/rdBfGDR/20000.jpg" alt="20000" data-value="20000" data-row="5">  
             </td>  
             <td>  
-              <input type="number" id="cantidad5" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad5" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total5">0</span>  
@@ -536,7 +559,7 @@
               <img src="https://i.ibb.co/BLBVXTN/50000.jpg" alt="50000" data-value="50000" data-row="6">  
             </td>  
             <td>  
-              <input type="number" id="cantidad6" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad6" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total6">0</span>  
@@ -547,7 +570,7 @@
               <img src="https://i.ibb.co/5sf1d7K/100000.jpg" alt="100000" data-value="100000" data-row="7">  
             </td>  
             <td>  
-              <input type="number" id="cantidad7" min="0" max="999">  
+              <input type="text" inputmode="decimal" id="cantidad7" placeholder="Ej: 10 5">  
             </td>  
             <td>  
               <span id="total7">0</span>  
