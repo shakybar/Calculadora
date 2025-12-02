@@ -15,7 +15,6 @@
   <link rel="apple-touch-icon" href="img/mainlogo.png">  
   <link rel="apple-touch-startup-image" href="img/mainlogo.png">  
   <link rel="manifest" href="./manifest.json">  
-  <title>Conteo de Billetes</title>  
   <style>
     body {  
       font-family: Arial, sans-serif;  
@@ -123,8 +122,6 @@
       max-width: 100%;  
     }  
 
-    /* Eliminar media queries para desactivar responsividad */  
-
     /* Estilo para el botón de borrar contenido */  
     #clearButton {  
       margin-top: 20px;  
@@ -215,6 +212,22 @@
     }
   </style>  
   <script>
+    /* ===============================================
+       CONFIGURACIÓN (Fuente de verdad)
+       ===============================================
+       Mapeamos el ID de la fila (1-7) con el valor real del billete.
+       Esto evita leer texto del HTML para hacer cálculos.
+    */
+    const DENOMINACIONES = {
+      1: 1000,
+      2: 2000,
+      3: 5000,
+      4: 10000,
+      5: 20000,
+      6: 50000,
+      7: 100000
+    };
+
     // Registro del Service Worker
     if ('serviceWorker' in navigator) {  
       window.addEventListener('load', () => {  
@@ -232,21 +245,28 @@
     function calculateRowTotal(row) {  
       const cantidadInput = document.getElementById(`cantidad${row}`);  
       const cantidad = parseInt(cantidadInput.value) || 0;  
-      const billeteImg = document.querySelector(`.image-cell img[data-row="${row}"]`);  
-      const valor = parseInt(billeteImg.getAttribute('data-value')) || 0;  
+      
+      // OPTIMIZACIÓN: Usamos el valor desde la configuración, no del DOM
+      const valor = DENOMINACIONES[row] || 0;
+      
       const total = cantidad * valor;  
       document.getElementById(`total${row}`).innerText = total.toLocaleString('es-CO');  
+      
+      // Recalcular total general
       calculateGrandTotal();  
     }  
 
-    // Función para calcular el total general  
+    // Función para calcular el total general (Optimizada)
     function calculateGrandTotal() {  
       let grandTotal = 0;  
-      for (let i = 1; i <= 7; i++) {  
-        const totalText = document.getElementById(`total${i}`).innerText;  
-        const total = parseInt(totalText.replace(/\./g, '').replace('$', '')) || 0;  
-        grandTotal += total;  
-      }  
+      
+      // Iteramos sobre nuestra configuración para sumar todo
+      for (const [rowId, valorBillete] of Object.entries(DENOMINACIONES)) {
+        const cantidadInput = document.getElementById(`cantidad${rowId}`);
+        const cantidad = parseInt(cantidadInput.value) || 0;
+        grandTotal += (cantidad * valorBillete);
+      }
+      
       document.getElementById("grandTotal").innerText = `$${grandTotal.toLocaleString('es-CO')}`;  
       calculateDifference();  
     }  
@@ -382,6 +402,9 @@
       
       // Agregar detalles de cada fila (billete, cantidad y total)
       for (let i = 1; i <= 7; i++) {
+        // Para el mensaje seguimos tomando el valor visual del atributo por conveniencia
+        // o podríamos usar DENOMINACIONES[i] si quisiéramos uniformidad total.
+        // Mantenemos la lógica visual original aquí para no alterar el formato del mensaje.
         const imgElement = document.querySelector(`.image-cell img[data-row="${i}"]`);
         const billValue = imgElement.getAttribute('data-value');
         const cantidad = document.getElementById(`cantidad${i}`).value || "0";
@@ -396,7 +419,7 @@
       const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(whatsappURL, '_blank');
 
-      // Cerrar el modal (opcional)
+      // Cerrar el modal
       closeModal();
     }
 
@@ -404,6 +427,7 @@
       for (let i = 1; i <= 7; i++) {
         const cantidadInput = document.getElementById(`cantidad${i}`);
         cantidadInput.addEventListener('input', limitCantidadInput);
+        // calculateRowTotal ahora es más eficiente
         cantidadInput.addEventListener('input', () => calculateRowTotal(i));
         cantidadInput.addEventListener('input', () => {
           localStorage.setItem(`cantidad${i}`, cantidadInput.value);
@@ -443,10 +467,7 @@
     <div class="table-container">  
       <table>  
         <colgroup>  
-          <col> <!-- Columna de Imágenes -->  
-          <col> <!-- Columna de Cantidad -->  
-          <col> <!-- Columna de Total -->  
-        </colgroup>  
+          <col> <col> <col> </colgroup>  
         <thead>  
           <tr>  
             <th>BILLETES</th>  
@@ -551,12 +572,10 @@
         </tfoot>  
       </table>  
       <button id="clearButton" type="button">Borrar contenido</button>  
-      <!-- Botón para enviar el resumen por WhatsApp -->  
       <button id="whatsappButton" type="button">Enviar resumen por WhatsApp</button>  
     </div>  
   </div>  
 
-  <!-- Modal para el formulario del resumen por WhatsApp -->
   <div id="modalOverlay">
     <div id="modalContent">
       <button id="modalClose" title="Cerrar">&times;</button>
