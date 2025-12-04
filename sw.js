@@ -1,23 +1,35 @@
-const CACHE_NAME = 'pwa-cache-v1';
+/* sw.js CORREGIDO */
+const CACHE_NAME = 'billetes-v2'; // Cambié la versión para forzar actualización
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/img/mainlogo.png',
-  '/js/script.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './manifest.json',
+  // './img/mainlogo.png', // Descomenta solo si tienes esta imagen en tu carpeta img
+  
+  // IMÁGENES EXTERNAS (Billetes)
+  // Es vital agregarlas aquí para que se descarguen y funcionen offline
+  'https://i.postimg.cc/BQ4BSP36/1000.jpg',
+  'https://i.ibb.co/zrSRSLy/2000.jpg',
+  'https://i.ibb.co/BVZwSB8S/5df7617506ee.jpg',
+  'https://i.ibb.co/pP7LNrp/10000.jpg',
+  'https://i.ibb.co/rdBfGDR/20000.jpg',
+  'https://i.ibb.co/BLBVXTN/50000.jpg',
+  'https://i.ibb.co/5sf1d7K/100000.jpg'
 ];
 
-// Instalación: cachear archivos esenciales
+// 1. Instalación: Cacheamos lo esencial
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
+      .then((cache) => {
+        console.log('Cacheando archivos...');
+        return cache.addAll(urlsToCache);
+      })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activación: limpiar caches antiguas
+// 2. Activación: Limpiamos cachés viejas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -29,26 +41,22 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: primero caché, luego red, con fallback
+// 3. Fetch: Estrategia Cache-First (Si está en caché, úsalo; si no, ve a internet)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) return cachedResponse;
-
+      // Si el archivo (o imagen) está en caché, devuélvelo
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      
+      // Si no, búscalo en internet
       return fetch(event.request)
-        .then((networkResponse) => {
-          // Cachear dinámicamente solo si es de nuestro origen
-          if (event.request.url.startsWith(self.location.origin)) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse.clone());
-            });
-          }
-          return networkResponse;
-        })
         .catch(() => {
-          // Si es navegación offline, devolver index.html
+          // Si falla internet y es una navegación, mostrar index.html
+          // (Opcional, útil si el usuario recarga en una sub-ruta)
           if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
+            return caches.match('./index.html');
           }
         });
     })
